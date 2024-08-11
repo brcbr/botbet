@@ -1,4 +1,9 @@
 ### :loudspeaker: I created this while learning how sockets and cryptography work in python. So bugs are possible.
+ #create exe client
+ 1. pip3 install -r requirements.txt
+ 2. cd Client
+ 3. pyinstaller main.spec
+ 4. file exe on dir (/Client/dist)
 
 <p align="center">
   <img src="Images/logo.png"/><br>
