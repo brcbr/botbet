@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-# Author : LimerBoy
-# github.com/LimerBoy/NukeShell
-
 # Import modules
 import Core.server as Server
 import Core.commands as Command
