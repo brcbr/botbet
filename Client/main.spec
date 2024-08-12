@@ -6,6 +6,7 @@ a = Analysis(
     pathex=['.', './Core'],
     binaries=[],
     datas=[],
+    console=False,
     hiddenimports=['Crypto', 'pyscreenshot', 'Pillow'],
     hookspath=[],
     hooksconfig={},
