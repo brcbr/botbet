@@ -67,5 +67,8 @@ class ServerListen:
             except OSError as e:
                 if self.ServerStopped:
                     return
-                print(f"{Fore.RED}[Server]{Fore.WHITE} Failed to accept client", *address, Fore.RESET, e)
+                # Check if 'address' is defined, if not set it to a placeholder
+                if 'address' not in locals():
+                    address = ('Unknown', 'Unknown')
+                print(f"{Fore.RED}[Server]{Fore.WHITE} Failed to accept client from {address}", Fore.RESET, e)
                 sleep(0.5)  # Small delay before retrying to avoid busy-waiting
